@@ -6,6 +6,7 @@ package io.flutter.plugins.camerax;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import androidx.camera.core.MirrorMode;
 import androidx.camera.video.Recorder;
 import androidx.camera.video.VideoCapture;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -27,7 +28,10 @@ public class VideoCaptureHostApiImpl implements VideoCaptureHostApi {
   public Long withOutput(@NonNull Long videoOutputId) {
     Recorder recorder =
         (Recorder) Objects.requireNonNull(instanceManager.getInstance(videoOutputId));
-    VideoCapture<Recorder> videoCapture = VideoCapture.withOutput(recorder);
+    VideoCapture<Recorder> videoCapture = new VideoCapture.Builder<>(recorder)
+            .setMirrorMode(MirrorMode.MIRROR_MODE_ON_FRONT_ONLY)
+            .build();
+//    VideoCapture<Recorder> videoCapture = VideoCapture.withOutput(recorder);
     final VideoCaptureFlutterApiImpl videoCaptureFlutterApi =
         getVideoCaptureFlutterApiImpl(binaryMessenger, instanceManager);
     videoCaptureFlutterApi.create(videoCapture, result -> {});
